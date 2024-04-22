@@ -74,11 +74,19 @@ class TaskService
 
             $task = Task::find($id);
 
+            $allDone = count(array_filter($data['subTasks'], function ($subTask) {
+                return $subTask['status'] !== TaskStatus::DONE;
+            })) === 0;
+
+            $someNotDone = count(array_filter($data['subTasks'], function ($subTask) {
+                return $subTask['status'] !== TaskStatus::DONE;
+            })) > 0;
+
             $task->update([
                 'slug' => Str::slug($data['title']),
                 'title' => $data['title'],
                 'content' => $data['content'],
-                'status' => $data['status'],
+                'status' => $allDone ? ($someNotDone ? TaskStatus::IN_PROGRESS : TaskStatus::DONE) : $data['status'],
             ]);
 
             // If there are sub tasks, then store them
@@ -104,9 +112,6 @@ class TaskService
             if ($draft) {
                 $task->update(['is_draft' => true]);
             }
-
-            // Assign the task to the user
-            $task->user()->associate(auth()->user());
 
             // Save the task
             $task->save();

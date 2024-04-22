@@ -18,7 +18,7 @@ final class TaskStatus extends Enum
     const TODO = 'to-do';
 
     #[Description('In Progress')]
-    const INPROGRESS = 'in-progress';
+    const IN_PROGRESS = 'in-progress';
 
     #[Description('Done')]
     const DONE = 'done';
