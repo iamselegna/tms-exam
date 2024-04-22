@@ -8,9 +8,12 @@
     <title>{{config('app.name')}}</title>
     @vite(['resources/css/app.css'])
     @livewireStyles
+    <wireui:scripts />
 </head>
 
 <body class="h-full">
+    <x-dialog />
+    <x-notifications />
 
     <div class="min-h-full">
         <nav class="bg-white border-b border-gray-200">
@@ -35,7 +38,9 @@
 
                         <!-- Profile dropdown -->
                         <div class="relative ml-3" x-data="{ open: false }">
-                            <div>
+                            <div class="flex items-center">
+                                <span class="mr-3 text-sm font-semibold">{{Auth::user()->name}}</span>
+
                                 <button type="button" @click="open = ! open"
                                     class="flex items-center max-w-xs text-sm bg-white rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                     id="user-menu-button" aria-expanded="false" aria-haspopup="true">
@@ -68,21 +73,13 @@
                             class="inline-flex items-center justify-center p-2 text-gray-400 bg-white rounded-md hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             aria-controls="mobile-menu" aria-expanded="false">
                             <span class="sr-only">Open main menu</span>
-                            <!--
-                    Heroicon name: outline/menu
 
-                    Menu open: "hidden", Menu closed: "block"
-                  -->
                             <svg class="block w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
-                            <!--
-                    Heroicon name: outline/x
 
-                    Menu open: "block", Menu closed: "hidden"
-                  -->
                             <svg class="hidden w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -150,6 +147,22 @@
     @vite(['resources/js/app.js'])
     @livewireScripts
     @stack('scripts')
+    <script>
+        document.addEventListener('livewire:init', () => {
+            Livewire.on('alert', (event) => {
+                console.log(event);
+                Swal.fire({
+                    title: event.title,
+                    text: event.description,
+                    icon: event.icon,
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false,
+                    padding: "0.8125rem",
+                    width: 'auto',
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

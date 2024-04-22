@@ -18,14 +18,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('auth.login');
-})->name('home');
+    return redirect()->route('tasks.index');
+})->name('home')->middleware(['auth']);
 
-Route::prefix('tasks')->name('tasks.')->group(function () {
+Route::middleware('auth')->prefix('tasks')->name('tasks.')->group(function () {
     Route::get('/', Index::class)->name('index');
     Route::prefix('management')->name('management.')->group(function () {
         Route::get('/', ManagementIndex::class)->name('index');
         Route::get('create', Create::class)->name('create');
         Route::get('update/{slug}', Update::class)->name('update');
     });
-})->middleware(['auth']);
+});

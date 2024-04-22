@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('slug');
             $table->string('title');
-            $table->foreignId('status_id')->constrained('task_status_references');
+            $table->string('status')->default('to-do');
             $table->boolean('is_draft')->default(false);
             $table->json('sub_tasks')->nullable();
             $table->softDeletes();

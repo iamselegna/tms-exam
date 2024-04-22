@@ -13,6 +13,8 @@ class Upload extends Model
 
     protected $table = 'uploads';
 
+    protected $fillable = ['path'];
+
     public function uploadable(): MorphTo
     {
         return $this->morphTo();
