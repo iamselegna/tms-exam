@@ -28,7 +28,8 @@ class Task extends Model
 
     protected $casts = [
         'sub_tasks' => 'array',
-        'status' => TaskStatus::class
+        'status' => TaskStatus::class,
+        'is_draft' => 'boolean',
     ];
 
     // public function status(): Attribute
@@ -51,5 +52,10 @@ class Task extends Model
     public function scopeSearch($query, $search)
     {
         return $query->where('title', 'like', '%' . $search . '%');
+    }
+
+    public function scopePublished($query)
+    {
+        return $query->where('is_draft', false);
     }
 }

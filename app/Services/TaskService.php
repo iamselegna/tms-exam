@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 
 class TaskService
 {
-    public function create(array $data, bool $draft)
+    public function create(array $data)
     {
         try {
             DB::beginTransaction();
@@ -42,11 +42,6 @@ class TaskService
                 ]);
             }
 
-            // If draft, then mark the task as draft
-            if ($draft) {
-                $task->update(['is_draft' => true]);
-            }
-
             // Assign the task to the user
             $task->user()->associate(auth()->user());
 
@@ -59,11 +54,11 @@ class TaskService
             return ['status' => 'success', 'message' => 'Task created successfully'];
         } catch (\Throwable $th) {
             DB::rollBack();
-            return ['status' => 'error', 'message' => $th->getMessage()];
+            return ['status' => 'error', 'message' => 'Failed to create task.'];
         }
     }
 
-    public function update($id, $data, $draft)
+    public function update($id, $data)
     {
 
 
@@ -74,19 +69,25 @@ class TaskService
 
             $task = Task::find($id);
 
-            $allDone = count(array_filter($data['subTasks'], function ($subTask) {
-                return $subTask['status'] !== TaskStatus::DONE;
-            })) === 0;
+            $allDone = $someNotDone = false;
 
-            $someNotDone = count(array_filter($data['subTasks'], function ($subTask) {
-                return $subTask['status'] !== TaskStatus::DONE;
-            })) > 0;
+            if (count($data['subTasks']) > 0) {
+
+                $allDone = count(array_filter($data['subTasks'], function ($subTask) {
+                    return $subTask['status'] !== TaskStatus::DONE;
+                })) === 0;
+
+                $someNotDone = count(array_filter($data['subTasks'], function ($subTask) {
+                    return $subTask['status'] !== TaskStatus::DONE;
+                })) > 0;
+            }
 
             $task->update([
                 'slug' => Str::slug($data['title']),
                 'title' => $data['title'],
                 'content' => $data['content'],
                 'status' => $allDone ? ($someNotDone ? TaskStatus::IN_PROGRESS : TaskStatus::DONE) : $data['status'],
+                'is_draft' => $data['is_draft'],
             ]);
 
             // If there are sub tasks, then store them
@@ -108,21 +109,16 @@ class TaskService
                 ]);
             }
 
-            // If draft, then mark the task as draft
-            if ($draft) {
-                $task->update(['is_draft' => true]);
-            }
-
             // Save the task
             $task->save();
 
             // Commit the transaction
             DB::commit();
 
-            return ['status' => 'success', 'message' => 'Task created successfully'];
+            return ['status' => 'success', 'message' => 'Task updated successfully'];
         } catch (\Throwable $th) {
             DB::rollBack();
-            return ['status' => 'error', 'message' => $th->getMessage()];
+            return ['status' => 'error', 'message' => 'Failed to update task.'];
         }
     }
 }

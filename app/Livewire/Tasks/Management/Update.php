@@ -41,7 +41,8 @@ class Update extends Component
                 'content' => $this->content,
                 'status' => $this->status,
                 'attachment' => $this->attachment,
-                'subTasks' => $this->subTasks
+                'subTasks' => $this->subTasks,
+                'is_draft' => $draft,
             ],
             [
                 'title' => ['required', 'max:100', Rule::unique('tasks', 'title')->ignore($this->task->id)],
@@ -52,6 +53,7 @@ class Update extends Component
                 'subTasks.*.title' => 'required|max:100',
                 'subTasks.*.content' => 'required|max:255',
                 'subTasks.*.status' => ['required', new EnumValue(TaskStatus::class)],
+                'is_draft' => 'nullable',
             ]
         )->validate();
 

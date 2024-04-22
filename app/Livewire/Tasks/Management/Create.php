@@ -23,7 +23,8 @@ class Create extends Component
                 'title' => $this->title,
                 'content' => $this->content,
                 'attachment' => $this->attachment,
-                'subTasks' => $this->subTasks
+                'subTasks' => $this->subTasks,
+                'is_draft' => $draft,
             ],
             [
                 'title' => 'required|max:100|unique:tasks,title',
@@ -31,7 +32,8 @@ class Create extends Component
                 'attachment' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
                 'subTasks' => 'nullable',
                 'subTasks.*.title' => 'required|max:100',
-                'subTasks.*.content' => 'required|max:255'
+                'subTasks.*.content' => 'required|max:255',
+                'is_draft' => 'nullable',
             ]
         )->validate();
 

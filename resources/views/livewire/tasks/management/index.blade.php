@@ -134,34 +134,42 @@
                             <td class="px-4 py-3">{{$task->is_draft ? 'Draft' : 'Published'}}</td>
                             <td class="px-4 py-3">{{$task->created_at}}</td>
                             <td class="flex items-center px-4 py-3">
-                                <button id="{{$task->slug}}-dropdown-button"
-                                    data-dropdown-toggle="{{$task->slug}}-dropdown"
-                                    class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                    type="button">
-                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                <button type="button" wire:click='loadTask({{$task->id}})'
+                                    class="inline-flex items-center p-1.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-width="2"
+                                            d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+                                        <path stroke="currentColor" stroke-width="2"
+                                            d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                     </svg>
+
+                                    <span class="sr-only">View Task</span>
                                 </button>
-                                <div id="{{$task->slug}}-dropdown"
-                                    class="z-10 hidden w-32 bg-white border divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600">
-                                    <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                        aria-labelledby="{{$task->slug}}-dropdown-button">
-                                        <li>
-                                            <button type="button" wire:click='loadTask({{$task->id}})'
-                                                class="block w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</button>
-                                        </li>
-                                        <li>
-                                            <a href="{{route('tasks.management.update', $task->slug)}}"
-                                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
-                                        </li>
-                                    </ul>
-                                    <div class="py-1">
-                                        <button wire:click='confirmDelete({{$task->id}})'
-                                            class="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</button>
-                                    </div>
-                                </div>
+                                <a href="{{route('tasks.management.update', $task->slug)}}"
+                                    class="inline-flex items-center p-1.5 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28" />
+                                    </svg>
+
+
+                                    <span class="sr-only">Edit Task</span>
+                                </a>
+                                <button type="button" wire:click='confirmDelete({{$task->id}})'
+                                    class="inline-flex items-center p-1.5 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                                    </svg>
+
+                                    <span class="sr-only">View Task</span>
+                                </button>
+
                             </td>
                         </tr>
                         @empty
@@ -179,13 +187,25 @@
         </div>
     </div>
 
-    <x-modal wire:model.defer="viewModal" max-width="xl">
-        <x-card title="{{$taskData->title ?? ''}}">
-
+    <x-modal wire:model.defer="viewModal" max-width="2xl">
+        <x-card title="Task Details" class="overflow-y-auto" squared="true">
             <dl class="w-full text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
+                <div class="flex flex-col pb-3">
+                    <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Title</dt>
+                    <dd class="text-lg font-semibold">{{$taskData->title ?? ''}}</dd>
+                </div>
                 <div class="flex flex-col pb-3">
                     <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Content</dt>
                     <dd class="text-lg font-semibold">{{$taskData->content ?? ''}}</dd>
+                </div>
+                <div class="flex flex-col pb-3">
+                    <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Status</dt>
+                    <dd class="text-lg font-semibold">{{$taskData->status->description ?? ''}}</dd>
+                </div>
+                <div class="flex flex-col pb-3">
+                    <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Display Status</dt>
+                    <dd class="text-lg font-semibold">{{ isset($taskData->is_draft) ? ($taskData->is_draft ? 'Draft' :
+                        'Published') : ''}}</dd>
                 </div>
                 @isset($taskData->upload)
                 <div class="flex flex-col py-3">
@@ -193,8 +213,8 @@
                     <dd class="text-lg font-semibold">
                         @if($taskData->upload->count() > 0)
                         <div class="flex justify-center w-full">
-                            <img class="h-auto rounded-lg" src="{{ Storage::url($taskData->upload->first()->path) }}"
-                                alt="image description">
+                            <img class="w-full h-auto rounded-lg "
+                                src="{{ Storage::url($taskData->upload->first()->path) }}" alt="image description">
                         </div>
                         @endif
                     </dd>
@@ -203,7 +223,31 @@
                 @isset($taskData->sub_tasks)
                 <div class="flex flex-col pt-3">
                     <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Sub Tasks</dt>
-                    <dd class="text-lg font-semibold">+00 123 456 789 / +12 345 678</dd>
+                    <dd class="text-lg font-semibold">
+                        <div class="flex flex-col gap-4">
+                            @foreach ($taskData->sub_tasks as $subTask)
+                            <div class="p-4 border rounded-md shadow-lg">
+                                <dl
+                                    class="divide-y divide-gray-200 w-fulltext-gray-900 dark:text-white dark:divide-gray-700">
+                                    <div class="flex flex-col pb-3">
+                                        <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Title</dt>
+                                        <dd class="text-lg font-semibold">{{$subTask['title']}}</dd>
+                                    </div>
+                                    <div class="flex flex-col py-3">
+                                        <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Content</dt>
+                                        <dd class="text-lg font-semibold">{{$subTask['content']}}
+                                        </dd>
+                                    </div>
+                                    <div class="flex flex-col pt-3">
+                                        <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Status</dt>
+                                        <dd class="text-lg font-semibold">{{Str::headline($subTask['status'])}}</dd>
+                                    </div>
+                                </dl>
+
+                            </div>
+                            @endforeach
+                        </div>
+                    </dd>
                 </div>
                 @endisset
             </dl>
