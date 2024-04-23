@@ -59,9 +59,7 @@ class Index extends Component
     public function render()
     {
         $tasks = Task::query()
-            ->withWhereHas('user', function ($query) {
-                $query->where('id', auth()->user()->id);
-            })
+            ->byUser()
             ->when($this->search, function ($query) {
                 $query->search($this->search);
             })

@@ -1,4 +1,4 @@
-<div x-data="initData">
+<div >
     <header class="mb-5">
         <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <h1 class="text-3xl font-bold leading-tight text-gray-900">Task Management</h1>
@@ -261,20 +261,4 @@
         </x-card>
     </x-modal>
 
-    @push('scripts')
-    <script>
-        document.addEventListener('livewire:init',()=>{
-            Alpine.data('initData',function(){
-               return { showCreateModal: false,
-                showEditModal: false,
-                toggleShowCreateModal(){
-                    this.showCreateModal = ! this.showCreateModal
-                },
-                toggleShowEditModal(){
-                    this.showEditModal = ! this.showEditModal
-                }}
-            });
-        });
-    </script>
-    @endpush
 </div>

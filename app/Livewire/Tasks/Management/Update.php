@@ -24,6 +24,8 @@ class Update extends Component
     public function mount($slug)
     {
         $this->task = Task::with(['upload'])->where('slug', $slug)->first();
+
+        $this->authorize('update', $this->task);
         $this->title = $this->task->title;
         $this->content = $this->task->content;
         // dd($this->task->status->value);

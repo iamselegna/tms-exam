@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\TaskStatus;
+use App\Models\Scopes\AuthorScope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
+// #[ScopedBy([AuthorScope::class])]
 class Task extends Model
 {
     use HasFactory;
@@ -57,5 +60,10 @@ class Task extends Model
     public function scopePublished($query)
     {
         return $query->where('is_draft', false);
+    }
+
+    public function scopeByUser($query)
+    {
+        return $query->where('user_id', auth()->user()->id);
     }
 }
