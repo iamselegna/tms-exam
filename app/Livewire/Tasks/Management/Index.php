@@ -5,6 +5,7 @@ namespace App\Livewire\Tasks\Management;
 use App\Enums\TaskStatus;
 use App\Models\Task;
 use App\Models\TaskStatusReference;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 use WireUi\Traits\Actions;
@@ -54,6 +55,31 @@ class Index extends Component
         $this->viewModal = true;
         $this->taskData = Task::with(['upload'])->where('id', $id)->first();
         // dd($this->task);
+    }
+
+    public function toggleDraft($id, $status)
+    {
+        try {
+            DB::beginTransaction();
+
+            $task = Task::find($id);
+
+            $task->update([
+                'is_draft' => $status
+            ]);
+
+            $this->notification()->success(
+                $title = 'Draft Status Changed',
+                $description = 'Draft status changed successfully'
+            );
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            $this->notification()->error(
+                $title = 'Error !!!',
+                $description = 'Draft status not changed'
+            );
+        }
     }
 
     public function render()

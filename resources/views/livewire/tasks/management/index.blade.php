@@ -1,4 +1,4 @@
-<div >
+<div>
     <header class="mb-5">
         <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <h1 class="text-3xl font-bold leading-tight text-gray-900">Task Management</h1>
@@ -131,7 +131,39 @@
                                 {{$task->title}}</th>
                             <td class="px-4 py-3">{{$task->status->description}}</td>
                             <td class="px-4 py-3">{{ isset($task->sub_tasks) ? count($task->sub_tasks) : 0}}</td>
-                            <td class="px-4 py-3">{{$task->is_draft ? 'Draft' : 'Published'}}</td>
+                            <td class="flex items-center gap-2 px-4 py-3">
+                                <span>{{$task->is_draft ? 'Draft' : 'Published'}}</span>
+                                @if ($task->is_draft)
+                                <button type="button" wire:click='toggleDraft({{$task->id}}, 0)'
+                                    class="inline-flex items-center p-1.5 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+
+                                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-width="2"
+                                            d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+                                        <path stroke="currentColor" stroke-width="2"
+                                            d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    </svg>
+
+                                    <span class="sr-only">Draft Task</span>
+                                </button>
+
+                                @else
+                                <button type="button" wire:click='toggleDraft({{$task->id}},1)'
+                                    class="inline-flex items-center p-1.5 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+
+                                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M3.933 13.909A4.357 4.357 0 0 1 3 12c0-1 4-6 9-6m7.6 3.8A5.068 5.068 0 0 1 21 12c0 1-3 6-9 6-.314 0-.62-.014-.918-.04M5 19 19 5m-4 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    </svg>
+
+                                    <span class="sr-only">Publish Task</span>
+                                </button>
+                                @endif
+
+                            </td>
                             <td class="px-4 py-3">{{$task->created_at}}</td>
                             <td class="flex items-center px-4 py-3">
                                 <button type="button" wire:click='loadTask({{$task->id}})'
