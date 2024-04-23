@@ -13,6 +13,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+
+        // This will prune all models older than 30 days
+        // Prunable Model - Task
+        $schedule->command('model:prune')->monthly();
     }
 
     /**
