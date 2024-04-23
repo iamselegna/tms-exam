@@ -62,8 +62,12 @@
                                 x-transition:leave-end="transform opacity-0 scale-95">
                                 <!-- Active: "bg-gray-100", Not Active: "" -->
 
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
-                                    id="user-menu-item-2"> Sign out </a>
+                                <form action="{{route('logout')}}" method="POST">
+                                    @csrf
+                                    @method('POST')
+                                    <button type="submit" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                                    id="user-menu-item-2"> Sign out </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -125,8 +129,6 @@
                         </button>
                     </div>
                     <div class="mt-3 space-y-1">
-
-
                         <a href="{{route('logout')}}"
                             class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
                             Sign out </a>
